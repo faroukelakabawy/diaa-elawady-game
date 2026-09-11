@@ -37,6 +37,8 @@ let gameOverSoundTimeout;
 let scale = 1;
 let boardWidth = 800;
 
+const MIN_BOARD_WIDTH = 700;
+
 function fitScale() {
     const panel = document.getElementById('controls-panel');
     const reserved = (panel ? panel.offsetHeight : 40) + 30;
@@ -45,7 +47,7 @@ function fitScale() {
     const availWidth = (vv ? vv.width : window.innerWidth) - 16;
     const availHeight = (vv ? vv.height : window.innerHeight) - reserved;
 
-    boardWidth = Math.round(Math.min(800, Math.max(500, availWidth / (availHeight / 400))));
+    boardWidth = Math.round(Math.min(800, Math.max(MIN_BOARD_WIDTH, availWidth / (availHeight / 400))));
     scale = Math.min(availWidth / (boardWidth + 8), availHeight / 408);
 
     document.documentElement.style.setProperty('--board', boardWidth + 'px');
