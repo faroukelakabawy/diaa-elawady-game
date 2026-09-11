@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة ماريو الكلاسيكية</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- شاشة البداية -->
+        <div id="start-screen" class="overlay-screen">
+            <h1>أهلاً بك في اللعبة</h1>
+            <button id="main-start-btn" onclick="startGame()">إلعب 🎮</button>
+            <p class="credits-start" style="margin-top: 15px; font-weight: bold; direction: ltr; font-size: 14px;">MADE BY: F.ELAKABAWY</p>
+        </div>
+
+        <!-- شاشة التوقف المؤقت -->
+        <div id="pause-screen" class="overlay-screen hidden">
+            <h1>اللعبة متوقفة مؤقتاً ⏸️</h1>
+            <button id="resume-btn" onclick="togglePause()">استئناف اللعب ▶️</button>
+        </div>
+
+        <!-- شاشة الفوز -->
+        <div id="win-screen" class="overlay-screen hidden">
+            <div class="trophy-icon">🏆</div>
+            <h1>كأس حبايبنا يا نجم</h1>
+            <p id="win-score">وصلت لـ 100 نووقطه بنجاح!</p>
+            <button id="win-restart-btn" onclick="startGame()">اللعب مجدداً 🔄</button>
+        </div>
+
+        <!-- شاشة نهاية اللعبة -->
+        <div id="game-over-screen" class="overlay-screen hidden">
+            <h1 id="screen-title">انتهت اللعبة!</h1>
+            <p id="final-score"></p>
+            <button id="restart-btn" onclick="startGame()">إعادة اللعب 🔄</button>
+        </div>
+
+        <!-- شريط النتيجة والحيوات -->
+        <div id="hud">
+            <div>نووقطه: <span id="score">0</span> / 100</div>
+            <button id="pause-btn" onclick="togglePause()">⏸️ إيقاف</button>
+            <div>القلوب: <span id="hearts" class="hearts">❤️❤️❤️</span></div>
+        </div>
+
+        <!-- شخصية اللاعب -->
+        <div id="player"></div>
+    </div>
+
+    <!-- تعليمات اللعب -->
+    <div id="controls-panel">
+        <p class="instructions">اضغط <b>Space (مسطرة)</b> للقفز | اضغط <b>P</b> للتوقف المؤقت</p>
+    </div>
+
+    <!-- الصوت المستمر -->
+    <audio id="bg-music" src="bg_sound.mp3" loop></audio>
+
+    <!-- المؤثرات الصوتية -->
+    <audio id="jump-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+    
+    <!-- صوت مكسب النقاط عند لمس السيجارة -->
+    <audio id="score-sound" src="https://physical-beige-umd2igkp.edgeone.dev/diaascore.mp3" preload="auto"></audio>
+    
+    <!-- صوت خسارة القلب عند لمس الفرخة -->
+    <audio id="heartloss-sound" src="https://okay-green-oa9rdfbc.edgeone.dev/" preload="auto"></audio>
+    
+    <audio id="gameover-sound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
+    <audio id="win-sound" src="https://assets.mixkit.co/active_storage/sfx/1434/1434-preview.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
