@@ -19,7 +19,7 @@ const insulinSound = document.getElementById('insulin-sound');
 const gameOverSound = document.getElementById('gameover-sound');
 const winSound = document.getElementById('win-sound');
 
-player.style.backgroundImage = "url('https://cdn.phototourl.com/free/2026-09-11-6e2edf1f-2b3c-48c2-9d19-6d7bb73e7e09.png')";
+player.style.backgroundImage = "url('assets/player.png')";
 
 let isJumping = false;
 let score = 0;
