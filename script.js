@@ -252,7 +252,7 @@ function updateGame() {
                 if (lives <= 0) {
                     item.element.remove();
                     elements.splice(i, 1);
-                    endGame("ما انت خلاص خدت هتاخد ايه تاني");
+                    endGame("ما انت خلاص خدت هتاخد فين تاني");
                     return;
                 }
             }
