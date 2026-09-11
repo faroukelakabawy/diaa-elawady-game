@@ -10,6 +10,7 @@ const gameOverScreen = document.getElementById('game-over-screen');
 const screenTitle = document.getElementById('screen-title');
 const finalScore = document.getElementById('final-score');
 
+const introMusic = document.getElementById('intro-music');
 const bgMusic = document.getElementById('bg-music');
 const jumpSound = document.getElementById('jump-sound');
 const scoreSound = document.getElementById('score-sound');
@@ -31,8 +32,8 @@ let isGameRunning = false;
 let isPaused = false;
 
 let elements = [];
+let gameOverSoundTimeout;
 
-// ربط زر التبديل فور تحميل الصفحة بشكل مباشر لتجنب أي مشاكل
 document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.getElementById('theme-toggle-btn');
     if (themeBtn) {
@@ -40,21 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// دالة التحويل بين الليل والنهار
 function toggleTheme() {
     const celestial = document.getElementById('celestial-body');
     const themeBtn = document.getElementById('theme-toggle-btn');
     
-    if (gameContainer.classList.contains('day')) {
-        gameContainer.classList.remove('day');
-        gameContainer.classList.add('night');
-        
-        if (celestial) {
-            celestial.classList.remove('sun');
-            celestial.classList.add('moon');
-        }
-        if (themeBtn) themeBtn.textContent = '☀️ نهار';
-    } else {
+    if (gameContainer.classList.contains('night')) {
         gameContainer.classList.remove('night');
         gameContainer.classList.add('day');
         
@@ -63,10 +54,18 @@ function toggleTheme() {
             celestial.classList.add('sun');
         }
         if (themeBtn) themeBtn.textContent = '🌙 ليل';
+    } else {
+        gameContainer.classList.remove('day');
+        gameContainer.classList.add('night');
+        
+        if (celestial) {
+            celestial.classList.remove('sun');
+            celestial.classList.add('moon');
+        }
+        if (themeBtn) themeBtn.textContent = '☀️ نهار';
     }
 }
 
-// دالة تشغيل صوت النقاط (السيجارة)
 function playScoreSound() {
     if (scoreSound) {
         scoreSound.currentTime = 0;
@@ -74,7 +73,6 @@ function playScoreSound() {
     }
 }
 
-// دالة تشغيل صوت الفرخة
 function playChickenSound() {
     if (heartLossSound) {
         heartLossSound.currentTime = 0;
@@ -82,7 +80,6 @@ function playChickenSound() {
     }
 }
 
-// دالة تشغيل صوت الحقنة
 function playInsulinSound() {
     if (insulinSound) {
         insulinSound.currentTime = 0;
@@ -122,6 +119,17 @@ function jump() {
 }
 
 function startGame() {
+    if (introMusic) {
+        introMusic.currentTime = 0;
+        introMusic.play().catch(e => console.log("خطأ تشغيل صوت البداية: ", e));
+    }
+
+    clearTimeout(gameOverSoundTimeout);
+    if (gameOverSound) {
+        gameOverSound.pause();
+        gameOverSound.currentTime = 0;
+    }
+
     score = 0;
     lives = 3;
 
@@ -226,19 +234,16 @@ function updateGame() {
             playerRect.bottom > itemRect.top + 20;
 
         if (isCollidingHorizontal && isCollidingVertical) {
-            // السيجارة -> زيادة النقاط 10
             if (item.type === 'cigarette') {
                 score += 10;
                 scoreElement.textContent = score;
                 playScoreSound();
             }
-            // الفرخة -> خصم 10 نقاط
             else if (item.type === 'chicken') {
                 score = Math.max(0, score - 10);
                 scoreElement.textContent = score;
                 playChickenSound();
             }
-            // حقنة الأنسولين -> خسارة قلب
             else if (item.type === 'insulin') {
                 lives--;
                 updateHeartsDisplay();
@@ -267,12 +272,17 @@ function endGame(customMessage = "انتهت اللعبة!") {
     isGameRunning = false;
     clearInterval(gameInterval);
     clearInterval(spawnInterval);
+    
     if (bgMusic) bgMusic.pause();
 
-    if (gameOverSound) {
-        gameOverSound.currentTime = 0;
-        gameOverSound.play().catch(e => console.log(e));
-    }
+    // تأخير تشغيل صوت الخسارة لمدة ثانية واحدة (1000 مللي ثانية)
+    clearTimeout(gameOverSoundTimeout);
+    gameOverSoundTimeout = setTimeout(() => {
+        if (gameOverSound && !isGameRunning) {
+            gameOverSound.currentTime = 0;
+            gameOverSound.play().catch(e => console.log("خطأ تشغيل صوت الخسارة: ", e));
+        }
+    }, 1000);
 
     screenTitle.textContent = customMessage;
     finalScore.textContent = `النقاط الإجمالية: ${score}`;
