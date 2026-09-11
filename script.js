@@ -41,8 +41,9 @@ function fitScale() {
     const panel = document.getElementById('controls-panel');
     const reserved = (panel ? panel.offsetHeight : 40) + 30;
 
-    const availWidth = window.innerWidth - 16;
-    const availHeight = window.innerHeight - reserved;
+    const vv = window.visualViewport;
+    const availWidth = (vv ? vv.width : window.innerWidth) - 16;
+    const availHeight = (vv ? vv.height : window.innerHeight) - reserved;
 
     boardWidth = Math.round(Math.min(800, Math.max(500, availWidth / (availHeight / 400))));
     scale = Math.min(availWidth / (boardWidth + 8), availHeight / 408);
@@ -54,6 +55,9 @@ function fitScale() {
 fitScale();
 window.addEventListener('resize', fitScale);
 window.addEventListener('orientationchange', fitScale);
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', fitScale);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.getElementById('theme-toggle-btn');
