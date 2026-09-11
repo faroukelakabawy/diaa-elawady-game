@@ -35,13 +35,19 @@ let elements = [];
 let gameOverSoundTimeout;
 
 let scale = 1;
+let boardWidth = 800;
 
 function fitScale() {
-    scale = Math.min(
-        1,
-        (window.innerWidth - 16) / 808,
-        (window.innerHeight - 100) / 408
-    );
+    const panel = document.getElementById('controls-panel');
+    const reserved = (panel ? panel.offsetHeight : 40) + 30;
+
+    const availWidth = window.innerWidth - 16;
+    const availHeight = window.innerHeight - reserved;
+
+    boardWidth = Math.round(Math.min(800, Math.max(500, availWidth / (availHeight / 400))));
+    scale = Math.min(availWidth / (boardWidth + 8), availHeight / 408);
+
+    document.documentElement.style.setProperty('--board', boardWidth + 'px');
     document.documentElement.style.setProperty('--scale', scale);
 }
 
@@ -228,13 +234,13 @@ function spawnObject() {
         obj.innerHTML = `<span class="insulin-icon">💉</span><span class="insulin-label">حقنة أنسولين</span>`;
     }
 
-    obj.style.left = '800px';
+    obj.style.left = boardWidth + 'px';
     gameContainer.appendChild(obj);
 
     elements.push({
         element: obj,
         type: type,
-        x: 800
+        x: boardWidth
     });
 }
 
