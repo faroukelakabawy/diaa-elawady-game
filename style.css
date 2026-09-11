@@ -11,169 +11,470 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #1a1a2e;
+    background-color: #0b0c10;
     color: #fff;
 }
 
+/* الشاشة الرئيسية للعبة */
 #game-container {
     position: relative;
     width: 800px;
     height: 400px;
-    background: linear-gradient(to bottom, #70c5ce 70%, #d2b48c 70%, #8b5a2b 75%);
     border: 4px solid #fff;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+    transition: background 0.8s ease;
 }
+
+/* ================================= */
+/* وضع النهار - شاطئ صباحي واقعي */
+/* ================================= */
+
+#game-container.day {
+    background:
+
+        /* تموجات الرمل فقط */
+        linear-gradient(
+            to bottom,
+            transparent 0%,
+            transparent 69%,
+
+            rgba(255,255,255,0.10) 69%,
+            rgba(255,255,255,0.10) 69.5%,
+            transparent 69.5%,
+
+            transparent 73%,
+
+            rgba(180,130,60,0.12) 73%,
+            rgba(180,130,60,0.12) 74%,
+            transparent 74%,
+
+            transparent 78%,
+
+            rgba(255,255,255,0.08) 78%,
+            rgba(255,255,255,0.08) 78.5%,
+            transparent 78.5%,
+
+            transparent 83%,
+
+            rgba(180,130,60,0.10) 83%,
+            rgba(180,130,60,0.10) 84%,
+            transparent 84%
+        ),
+
+        /* رمال الشاطئ */
+        linear-gradient(
+            to bottom,
+            transparent 69%,
+            #f8df9a 69%,
+            #f3d487 76%,
+            #e8bd69 84%,
+            #dca653 100%
+        ),
+
+        /* العشب */
+        linear-gradient(
+            to bottom,
+            transparent 0%,
+            transparent 67%,
+            #4f9b45 67%,
+            #347a35 69%,
+            transparent 69%
+        ),
+
+        /* السماء الصباحية */
+        linear-gradient(
+            to bottom,
+            #1565c0 0%,
+            #42a5f5 42%,
+            #81d4fa 69%,
+            #a9e2f5 100%
+        );
+}
+
+/* ================================= */
+/* وضع الليل - بدون تغيير */
+/* ================================= */
+
+#game-container.night {
+    background: 
+        /* نجيل معتم ليلي */
+        linear-gradient(
+            to bottom,
+            transparent 68%,
+            #1b5e20 68%,
+            #0f3811 71%,
+            transparent 71%
+        ),
+
+        /* رمال شاطئ في الليل */
+        linear-gradient(
+            to bottom,
+            transparent 71%,
+            #8d6e63 71%,
+            #4e342e 85%,
+            #1c100b 100%
+        ),
+
+        /* سماء ليلية عميقة */
+        linear-gradient(
+            to bottom,
+            #020208 0%,
+            #0d1b2a 60%,
+            #1b263b 71%
+        );
+}
+
+/* ================================= */
+/* الشمس والقمر */
+/* ================================= */
+
+#celestial-body {
+    position: absolute;
+    top: 35px;
+    right: 60px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    transition: all 0.8s ease-in-out;
+    z-index: 2;
+}
+
+/* الشمس */
+#celestial-body.sun {
+    background: radial-gradient(
+        circle,
+        #fff7ad 0%,
+        #ffd54f 60%,
+        #ffb300 100%
+    );
+
+    box-shadow:
+        0 0 40px #ffca28,
+        0 0 80px rgba(255, 193, 7, 0.6);
+}
+
+/* القمر */
+#celestial-body.moon {
+    background: radial-gradient(
+        circle,
+        #ffffff 0%,
+        #e0e0e0 70%,
+        #b0bec5 100%
+    );
+
+    box-shadow:
+        0 0 20px #ffffff,
+        0 0 40px rgba(255, 255, 255, 0.4);
+}
+
+/* ================================= */
+/* النجوم */
+/* ================================= */
+
+#stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 68%;
+
+    opacity: 0;
+
+    background-image: 
+        radial-gradient(
+            2px 2px at 20px 30px,
+            #fff,
+            rgba(0,0,0,0)
+        ),
+
+        radial-gradient(
+            2px 2px at 100px 80px,
+            #fff,
+            rgba(0,0,0,0)
+        ),
+
+        radial-gradient(
+            1.5px 1.5px at 200px 40px,
+            #fff,
+            rgba(0,0,0,0)
+        ),
+
+        radial-gradient(
+            2px 2px at 320px 120px,
+            #fff,
+            rgba(0,0,0,0)
+        ),
+
+        radial-gradient(
+            1.5px 1.5px at 450px 30px,
+            #fff,
+            rgba(0,0,0,0)
+        ),
+
+        radial-gradient(
+            2px 2px at 580px 90px,
+            #fff,
+            rgba(0,0,0,0)
+        ),
+
+        radial-gradient(
+            1.5px 1.5px at 700px 50px,
+            #fff,
+            rgba(0,0,0,0)
+        );
+
+    transition: opacity 0.8s ease;
+    z-index: 1;
+}
+
+#game-container.night #stars {
+    opacity: 0.9;
+}
+
+/* ================================= */
+/* شريط المعلومات HUD */
+/* ================================= */
 
 #hud {
     position: absolute;
     top: 15px;
     left: 20px;
     right: 20px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 18px;
+
+    font-size: 17px;
     font-weight: bold;
+
     z-index: 10;
-    background: rgba(0, 0, 0, 0.4);
+
+    background: rgba(0, 0, 0, 0.5);
+
+    backdrop-filter: blur(4px);
+
     padding: 8px 15px;
+
     border-radius: 8px;
+
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
+/* ================================= */
+/* أزرار التحكم */
+/* ================================= */
+
+#theme-toggle-btn,
 #pause-btn {
     background: #e1b12c;
+
     border: none;
-    padding: 5px 12px;
-    border-radius: 5px;
+
+    padding: 6px 14px;
+
+    border-radius: 6px;
+
     font-weight: bold;
+
     cursor: pointer;
+
     color: #000;
+
+    transition: 0.2s;
 }
 
+#theme-toggle-btn:hover,
 #pause-btn:hover {
     background: #fbc531;
+    transform: scale(1.05);
 }
+
+/* ================================= */
+/* القلوب */
+/* ================================= */
 
 .hearts {
     color: #ff4757;
     font-size: 22px;
 }
 
+/* ================================= */
+/* اللاعب */
+/* ================================= */
+
 #player {
     position: absolute;
-    bottom: 120px;
+
+    bottom: 116px;
     left: 80px;
+
     width: 75px;
     height: 120px;
+
     background-image: url('https://cdn.phototourl.com/free/2026-09-11-6e2edf1f-2b3c-48c2-9d19-6d7bb73e7e09.png');
+
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    transition: filter 0.3s;
+
+    z-index: 5;
 }
 
-.shield-active {
-    filter: drop-shadow(0 0 10px #00d2d3) brightness(1.2);
-}
+/* ================================= */
+/* حركة القفز */
+/* ================================= */
 
 .jump {
     animation: jumpAnimation 0.65s ease-out;
 }
 
 @keyframes jumpAnimation {
-    0% { bottom: 120px; }
-    50% { bottom: 310px; }
-    100% { bottom: 120px; }
+
+    0% {
+        bottom: 116px;
+    }
+
+    50% {
+        bottom: 310px;
+    }
+
+    100% {
+        bottom: 116px;
+    }
 }
 
-.chicken {
-    position: absolute;
-    bottom: 120px;
-    width: 45px;
-    height: 45px;
-    font-size: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* ================================= */
+/* عناصر اللعبة */
+/* ================================= */
 
-.cigarette {
-    position: absolute;
-    bottom: 120px;
-    width: 40px;
-    height: 40px;
-    font-size: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+.chicken,
+.cigarette,
 .insulin {
     position: absolute;
-    bottom: 120px;
+    bottom: 116px;
+    z-index: 4;
+}
+
+/* الدجاجة */
+.chicken {
+    width: 45px;
+    height: 45px;
+
+    font-size: 35px;
+
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+/* السيجارة */
+.cigarette {
+    width: 40px;
+    height: 40px;
+
+    font-size: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================================= */
+/* الحقنة */
+/* ================================= */
+
+.insulin {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 30px;
 }
 
 .insulin-icon {
-    font-size: 30px;
+    font-size: 22px;
 }
 
 .insulin-label {
-    font-size: 10px;
+    font-size: 8px;
+
     background: #00d2d3;
+
     color: #000;
-    padding: 1px 4px;
+
+    padding: 1px 3px;
+
     border-radius: 3px;
+
     font-weight: bold;
+
     white-space: nowrap;
 }
 
+/* ================================= */
+/* شاشات البداية والفوز والخسارة */
+/* ================================= */
+
 .overlay-screen {
     position: absolute;
+
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
+
     background: rgba(0, 0, 0, 0.85);
+
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
+
     align-items: center;
+
     z-index: 20;
+
     gap: 15px;
 }
 
 .overlay-screen h1 {
     font-size: 36px;
+
     color: #fbc531;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+    text-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.7);
+
     text-align: center;
-}
-
-.trophy-icon {
-    font-size: 80px;
-    animation: bounce 1s infinite alternate;
-}
-
-@keyframes bounce {
-    from { transform: translateY(0); }
-    to { transform: translateY(-15px); }
 }
 
 .overlay-screen button {
     padding: 12px 35px;
+
     font-size: 20px;
+
     font-weight: bold;
+
     background-color: #4cd137;
+
     color: white;
+
     border: none;
+
     border-radius: 8px;
+
     cursor: pointer;
+
     transition: 0.3s;
 }
 
@@ -181,17 +482,29 @@ body {
     background-color: #44bd32;
 }
 
+/* ================================= */
+/* لوحة التحكم */
+/* ================================= */
+
 #controls-panel {
     margin-top: 20px;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
 }
+
+/* ================================= */
+/* العناصر المخفية */
+/* ================================= */
 
 .hidden {
     display: none !important;
 }
 
+/* التعليمات */
 .instructions {
     color: #aaa;
     font-size: 14px;

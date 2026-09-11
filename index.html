@@ -7,10 +7,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-container">
+    <div id="game-container" class="day">
+        <!-- عناصر السماء (الشمس/القمر والنجوم) -->
+        <div id="celestial-body" class="sun"></div>
+        <div id="stars"></div>
+
         <!-- شاشة البداية -->
         <div id="start-screen" class="overlay-screen">
-            <h1>حبيب دين امي نووقطه</h1>
+            <h1>حبايب دين امي اضغط للعب  </h1>
             <button id="main-start-btn" onclick="startGame()">إلعب 🎮</button>
         </div>
 
@@ -37,7 +41,8 @@
 
         <!-- شريط النتيجة والحيوات -->
         <div id="hud">
-            <div>النقاط: <span id="score">0</span> / 100</div>
+            <div>النقاط: <span id="score">0</span></div>
+            <button id="theme-toggle-btn">🌙 ليل</button>
             <button id="pause-btn" onclick="togglePause()">⏸️ إيقاف</button>
             <div>القلوب: <span id="hearts" class="hearts">❤️❤️❤️</span></div>
         </div>
@@ -51,18 +56,12 @@
         <p class="instructions">اضغط <b>Space (مسطرة)</b> للقفز | اضغط <b>P</b> للتوقف المؤقت</p>
     </div>
 
-    <!-- الصوت المستمر -->
+    <!-- الأصوات -->
     <audio id="bg-music" src="bg_sound.mp3" loop></audio>
-
-    <!-- المؤثرات الصوتية -->
     <audio id="jump-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
-    
-    <!-- صوت مكسب النقاط عند لمس السيجارة -->
     <audio id="score-sound" src="https://famous-silver-6dkai0ds.edgeone.dev/" preload="auto"></audio>
-    
-    <!-- صوت خسارة القلب عند لمس الفرخة -->
     <audio id="heartloss-sound" src="https://specified-yellow-hfwjuxsk.edgeone.dev/" preload="auto"></audio>
-    
+    <audio id="insulin-sound" src="https://melodic-sapphire-carrohfe.edgeone.dev/" preload="auto"></audio>
     <audio id="gameover-sound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
     <audio id="win-sound" src="https://assets.mixkit.co/active_storage/sfx/1434/1434-preview.mp3" preload="auto"></audio>
 

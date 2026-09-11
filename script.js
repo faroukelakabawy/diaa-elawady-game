@@ -7,12 +7,14 @@ const startScreen = document.getElementById('start-screen');
 const pauseScreen = document.getElementById('pause-screen');
 const winScreen = document.getElementById('win-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
+const screenTitle = document.getElementById('screen-title');
 const finalScore = document.getElementById('final-score');
 
 const bgMusic = document.getElementById('bg-music');
 const jumpSound = document.getElementById('jump-sound');
 const scoreSound = document.getElementById('score-sound');
 const heartLossSound = document.getElementById('heartloss-sound');
+const insulinSound = document.getElementById('insulin-sound');
 const gameOverSound = document.getElementById('gameover-sound');
 const winSound = document.getElementById('win-sound');
 
@@ -30,23 +32,61 @@ let isPaused = false;
 
 let elements = [];
 
-// دالة تشغيل صوت النقاط عند لمس السيجارة
-function playScoreSound() {
-    if (scoreSound) {
-        scoreSound.currentTime = 0;
-        scoreSound.play().catch(error => {
-            console.log("تعذر تشغيل صوت النقاط:", error);
-        });
+// ربط زر التبديل فور تحميل الصفحة بشكل مباشر لتجنب أي مشاكل
+document.addEventListener('DOMContentLoaded', () => {
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+    }
+});
+
+// دالة التحويل بين الليل والنهار
+function toggleTheme() {
+    const celestial = document.getElementById('celestial-body');
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    
+    if (gameContainer.classList.contains('day')) {
+        gameContainer.classList.remove('day');
+        gameContainer.classList.add('night');
+        
+        if (celestial) {
+            celestial.classList.remove('sun');
+            celestial.classList.add('moon');
+        }
+        if (themeBtn) themeBtn.textContent = '☀️ نهار';
+    } else {
+        gameContainer.classList.remove('night');
+        gameContainer.classList.add('day');
+        
+        if (celestial) {
+            celestial.classList.remove('moon');
+            celestial.classList.add('sun');
+        }
+        if (themeBtn) themeBtn.textContent = '🌙 ليل';
     }
 }
 
-// دالة تشغيل صوت خسارة القلب عند لمس الفرخة
-function playHeartLossSound() {
+// دالة تشغيل صوت النقاط (السيجارة)
+function playScoreSound() {
+    if (scoreSound) {
+        scoreSound.currentTime = 0;
+        scoreSound.play().catch(error => console.log(error));
+    }
+}
+
+// دالة تشغيل صوت الفرخة
+function playChickenSound() {
     if (heartLossSound) {
         heartLossSound.currentTime = 0;
-        heartLossSound.play().catch(error => {
-            console.log("تعذر تشغيل صوت خسارة القلب:", error);
-        });
+        heartLossSound.play().catch(error => console.log(error));
+    }
+}
+
+// دالة تشغيل صوت الحقنة
+function playInsulinSound() {
+    if (insulinSound) {
+        insulinSound.currentTime = 0;
+        insulinSound.play().catch(error => console.log(error));
     }
 }
 
@@ -142,14 +182,18 @@ function spawnObject() {
     const obj = document.createElement('div');
     let type = '';
 
-    if (rand < 0.5) {
+    if (rand < 0.35) {
         type = 'chicken';
         obj.classList.add('chicken');
         obj.innerHTML = '🐔';
-    } else {
+    } else if (rand < 0.7) {
         type = 'cigarette';
         obj.classList.add('cigarette');
         obj.innerHTML = '🚬';
+    } else {
+        type = 'insulin';
+        obj.classList.add('insulin');
+        obj.innerHTML = `<span class="insulin-icon">💉</span><span class="insulin-label">حقنة أنسولين</span>`;
     }
 
     obj.style.left = '800px';
@@ -182,38 +226,34 @@ function updateGame() {
             playerRect.bottom > itemRect.top + 20;
 
         if (isCollidingHorizontal && isCollidingVertical) {
-            // لمس السيجارة -> زيادة النقاط وتشغيل صوت النقاط
+            // السيجارة -> زيادة النقاط 10
             if (item.type === 'cigarette') {
                 score += 10;
                 scoreElement.textContent = score;
-
                 playScoreSound();
-
-                item.element.remove();
-                elements.splice(i, 1);
             }
-            // لمس الفرخة -> خسارة قلب وتشغيل صوت الخسارة
+            // الفرخة -> خصم 10 نقاط
             else if (item.type === 'chicken') {
+                score = Math.max(0, score - 10);
+                scoreElement.textContent = score;
+                playChickenSound();
+            }
+            // حقنة الأنسولين -> خسارة قلب
+            else if (item.type === 'insulin') {
                 lives--;
                 updateHeartsDisplay();
-
-                playHeartLossSound();
+                playInsulinSound();
 
                 if (lives <= 0) {
                     item.element.remove();
                     elements.splice(i, 1);
-                    endGame();
+                    endGame("ما انت خلاص خدت هتاخد ايه تاني");
                     return;
                 }
-
-                item.element.remove();
-                elements.splice(i, 1);
             }
 
-            if (score >= 100) {
-                winGame();
-                return;
-            }
+            item.element.remove();
+            elements.splice(i, 1);
         }
 
         if (item.x < -50) {
@@ -223,21 +263,7 @@ function updateGame() {
     }
 }
 
-function winGame() {
-    isGameRunning = false;
-    clearInterval(gameInterval);
-    clearInterval(spawnInterval);
-    if (bgMusic) bgMusic.pause();
-
-    if (winSound) {
-        winSound.currentTime = 0;
-        winSound.play().catch(e => console.log(e));
-    }
-
-    winScreen.classList.remove('hidden');
-}
-
-function endGame() {
+function endGame(customMessage = "انتهت اللعبة!") {
     isGameRunning = false;
     clearInterval(gameInterval);
     clearInterval(spawnInterval);
@@ -248,6 +274,7 @@ function endGame() {
         gameOverSound.play().catch(e => console.log(e));
     }
 
+    screenTitle.textContent = customMessage;
     finalScore.textContent = `النقاط الإجمالية: ${score}`;
     gameOverScreen.classList.remove('hidden');
 }
