@@ -34,10 +34,34 @@ let isPaused = false;
 let elements = [];
 let gameOverSoundTimeout;
 
+let scale = 1;
+
+function fitScale() {
+    scale = Math.min(
+        1,
+        (window.innerWidth - 16) / 808,
+        (window.innerHeight - 100) / 408
+    );
+    document.documentElement.style.setProperty('--scale', scale);
+}
+
+fitScale();
+window.addEventListener('resize', fitScale);
+window.addEventListener('orientationchange', fitScale);
+
 document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.getElementById('theme-toggle-btn');
     if (themeBtn) {
         themeBtn.addEventListener('click', toggleTheme);
+    }
+});
+
+gameContainer.addEventListener('pointerdown', function(event) {
+    if (event.target.closest('button')) return;
+
+    if (isGameRunning && !isPaused && !isJumping) {
+        event.preventDefault();
+        jump();
     }
 });
 
@@ -227,11 +251,11 @@ function updateGame() {
         const itemRect = item.element.getBoundingClientRect();
 
         const isCollidingHorizontal =
-            playerRect.left < itemRect.right - 15 &&
-            playerRect.right > itemRect.left + 15;
+            playerRect.left < itemRect.right - 15 * scale &&
+            playerRect.right > itemRect.left + 15 * scale;
 
         const isCollidingVertical =
-            playerRect.bottom > itemRect.top + 20;
+            playerRect.bottom > itemRect.top + 20 * scale;
 
         if (isCollidingHorizontal && isCollidingVertical) {
             if (item.type === 'cigarette') {
@@ -275,7 +299,6 @@ function endGame(customMessage = "انتهت اللعبة!") {
     
     if (bgMusic) bgMusic.pause();
 
-    // تأخير تشغيل صوت الخسارة لمدة ثانية واحدة (1000 مللي ثانية)
     clearTimeout(gameOverSoundTimeout);
     gameOverSoundTimeout = setTimeout(() => {
         if (gameOverSound && !isGameRunning) {

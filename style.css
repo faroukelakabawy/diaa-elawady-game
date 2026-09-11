@@ -13,9 +13,9 @@ body {
     min-height: 100vh;
     background-color: #0b0c10;
     color: #fff;
+    overflow: hidden;
 }
 
-/* الشاشة الرئيسية للعبة */
 #game-container {
     position: relative;
     width: 800px;
@@ -25,16 +25,16 @@ body {
     overflow: hidden;
     box-shadow: 0 15px 30px rgba(0,0,0,0.8);
     transition: background 0.8s ease;
-}
 
-/* ================================= */
-/* وضع النهار - شاطئ صباحي واقعي */
-/* ================================= */
+    zoom: var(--scale, 1);
+
+    touch-action: manipulation;
+    user-select: none;
+}
 
 #game-container.day {
     background:
 
-        /* تموجات الرمل فقط */
         linear-gradient(
             to bottom,
             transparent 0%,
@@ -63,7 +63,6 @@ body {
             transparent 84%
         ),
 
-        /* رمال الشاطئ */
         linear-gradient(
             to bottom,
             transparent 69%,
@@ -73,7 +72,6 @@ body {
             #dca653 100%
         ),
 
-        /* العشب */
         linear-gradient(
             to bottom,
             transparent 0%,
@@ -83,7 +81,6 @@ body {
             transparent 69%
         ),
 
-        /* السماء الصباحية */
         linear-gradient(
             to bottom,
             #1565c0 0%,
@@ -93,13 +90,9 @@ body {
         );
 }
 
-/* ================================= */
-/* وضع الليل */
-/* ================================= */
-
 #game-container.night {
-    background: 
-        /* نجيل معتم ليلي */
+    background:
+
         linear-gradient(
             to bottom,
             transparent 68%,
@@ -108,7 +101,6 @@ body {
             transparent 71%
         ),
 
-        /* رمال شاطئ في الليل */
         linear-gradient(
             to bottom,
             transparent 71%,
@@ -117,7 +109,6 @@ body {
             #1c100b 100%
         ),
 
-        /* سماء ليلية عميقة */
         linear-gradient(
             to bottom,
             #020208 0%,
@@ -125,10 +116,6 @@ body {
             #1b263b 71%
         );
 }
-
-/* ================================= */
-/* الشمس والقمر */
-/* ================================= */
 
 #celestial-body {
     position: absolute;
@@ -141,7 +128,6 @@ body {
     z-index: 2;
 }
 
-/* الشمس */
 #celestial-body.sun {
     background: radial-gradient(
         circle,
@@ -155,7 +141,6 @@ body {
         0 0 80px rgba(255, 193, 7, 0.6);
 }
 
-/* القمر */
 #celestial-body.moon {
     background: radial-gradient(
         circle,
@@ -169,10 +154,6 @@ body {
         0 0 40px rgba(255, 255, 255, 0.4);
 }
 
-/* ================================= */
-/* النجوم */
-/* ================================= */
-
 #stars {
     position: absolute;
     top: 0;
@@ -183,7 +164,7 @@ body {
 
     opacity: 0;
 
-    background-image: 
+    background-image:
         radial-gradient(
             2px 2px at 20px 30px,
             #fff,
@@ -234,10 +215,6 @@ body {
     opacity: 0.9;
 }
 
-/* ================================= */
-/* شريط المعلومات HUD */
-/* ================================= */
-
 #hud {
     position: absolute;
     top: 15px;
@@ -264,10 +241,6 @@ body {
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* ================================= */
-/* أزرار التحكم */
-/* ================================= */
-
 #theme-toggle-btn,
 #pause-btn {
     background: #e1b12c;
@@ -293,18 +266,10 @@ body {
     transform: scale(1.05);
 }
 
-/* ================================= */
-/* القلوب */
-/* ================================= */
-
 .hearts {
     color: #ff4757;
     font-size: 22px;
 }
-
-/* ================================= */
-/* اللاعب */
-/* ================================= */
 
 #player {
     position: absolute;
@@ -323,10 +288,6 @@ body {
 
     z-index: 5;
 }
-
-/* ================================= */
-/* حركة القفز */
-/* ================================= */
 
 .jump {
     animation: jumpAnimation 0.65s ease-out;
@@ -347,10 +308,6 @@ body {
     }
 }
 
-/* ================================= */
-/* عناصر اللعبة */
-/* ================================= */
-
 .chicken,
 .cigarette,
 .insulin {
@@ -359,7 +316,6 @@ body {
     z-index: 4;
 }
 
-/* الدجاجة */
 .chicken {
     width: 45px;
     height: 45px;
@@ -371,7 +327,6 @@ body {
     justify-content: center;
 }
 
-/* السيجارة */
 .cigarette {
     width: 40px;
     height: 40px;
@@ -382,10 +337,6 @@ body {
     align-items: center;
     justify-content: center;
 }
-
-/* ================================= */
-/* الحقنة */
-/* ================================= */
 
 .insulin {
     display: flex;
@@ -418,10 +369,6 @@ body {
 
     white-space: nowrap;
 }
-
-/* ================================= */
-/* شاشات البداية والفوز والخسارة */
-/* ================================= */
 
 .overlay-screen {
     position: absolute;
@@ -482,10 +429,6 @@ body {
     background-color: #44bd32;
 }
 
-/* ================================= */
-/* لوحة التحكم */
-/* ================================= */
-
 #controls-panel {
     margin-top: 20px;
 
@@ -496,16 +439,31 @@ body {
     align-items: center;
 }
 
-/* ================================= */
-/* العناصر المخفية */
-/* ================================= */
-
 .hidden {
     display: none !important;
 }
 
-/* التعليمات */
 .instructions {
     color: #aaa;
     font-size: 14px;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.touch-only { display: none; }
+
+@media (hover: none) {
+    .keyboard-only { display: none; }
+    .touch-only { display: block; }
+}
+
+#rotate-hint { display: none; }
+
+@media (hover: none) and (orientation: portrait) {
+    #rotate-hint {
+        display: block;
+        color: #fbc531;
+        font-size: 14px;
+        margin-top: 8px;
+    }
 }
