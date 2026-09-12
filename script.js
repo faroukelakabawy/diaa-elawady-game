@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-gameContainer.addEventListener('pointerdown', function(event) {
+document.addEventListener('pointerdown', function(event) {
     if (event.target.closest('button')) return;
 
     if (isGameRunning && !isPaused && !isJumping) {
